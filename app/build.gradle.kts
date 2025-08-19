@@ -2,20 +2,23 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt.android)
+    alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "com.yoyo.mushmoodapp"
-    compileSdk = 36
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.yoyo.mushmoodapp"
         minSdk = 28
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "DEFAULT_WLED_HOST", "\"192.168.1.100\"")
     }
 
     buildTypes {
@@ -33,6 +36,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -46,6 +50,24 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    // Retrofit & OkHttp
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.okhttp.logging.interceptor)
+    implementation(libs.gson)
+
+    // Media3 ExoPlayer
+    implementation(libs.media3.exoplayer)
+
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
+
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.kotlinx.coroutines.android)
     testImplementation(libs.junit)
