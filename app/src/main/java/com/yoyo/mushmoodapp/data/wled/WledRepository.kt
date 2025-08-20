@@ -11,11 +11,11 @@ class WledRepository @Inject constructor(
     private val prefs: Prefs
 ) {
     suspend fun setPreset(presetId: Int): Boolean {
-        val url = "http://${'$'}{prefs.getHost()}/json/state"
+        val url = "http://${prefs.getHost()}/json/state"
         return try {
             val response = api.setPreset(url, PresetRequest(presetId))
             val success = response.isSuccessful
-            Log.d(TAG, "setPreset(${presetId}) success=${'$'}success")
+            Log.d(TAG, "setPreset(${presetId}) success=${success}")
             success
         } catch (t: Throwable) {
             Log.e(TAG, "setPreset error", t)
@@ -24,7 +24,7 @@ class WledRepository @Inject constructor(
     }
 
     suspend fun ping(): Boolean {
-        val url = "https://${prefs.getHost()}:8080/json/state"
+        val url = "http://${prefs.getHost()}/json/state"
         return try {
             val response = api.ping(url)
             val success = response.isSuccessful
