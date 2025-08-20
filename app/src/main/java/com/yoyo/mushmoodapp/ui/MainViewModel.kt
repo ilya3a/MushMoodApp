@@ -52,6 +52,10 @@ class MainViewModel @Inject constructor(
     }
 
     fun onPingClick() {
+        if (_uiState.value.host.isBlank()) {
+            _uiState.update { it.copy(message = "Host is empty") }
+            return
+        }
         viewModelScope.launch {
             val success = pingWled()
             if (success) {
@@ -65,6 +69,11 @@ class MainViewModel @Inject constructor(
     fun onSceneClick(sceneId: Int) {
         val currentId = _uiState.value.runningSceneId
         val scene = SceneDefs.scenes.getOrNull(sceneId) ?: return
+        val needNetwork = currentId == null || currentId != sceneId
+        if (needNetwork && _uiState.value.host.isBlank()) {
+            _uiState.update { it.copy(message = "Host is empty") }
+            return
+        }
         viewModelScope.launch {
             when {
                 currentId == null -> {
