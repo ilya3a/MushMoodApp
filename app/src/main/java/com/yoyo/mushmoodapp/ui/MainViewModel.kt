@@ -33,7 +33,7 @@ class MainViewModel @Inject constructor(
         val runningSceneId: Int? = null,
         val timeLeftSec: Int = 0,
         val host: String = "",
-        val error: String? = null,
+        val message: String? = null,
         val isPinned: Boolean = false,
     )
 
@@ -54,10 +54,10 @@ class MainViewModel @Inject constructor(
     fun onPingClick() {
         viewModelScope.launch {
             val success = pingWled()
-            if (!success) {
-                _uiState.update { it.copy(error = "Ping failed") }
+            if (success) {
+                _uiState.update { it.copy(message = "Ping successful") }
             } else {
-                _uiState.update { it.copy(error = null) }
+                _uiState.update { it.copy(message = "Ping failed") }
             }
         }
     }
@@ -72,7 +72,7 @@ class MainViewModel @Inject constructor(
                         _uiState.update { it.copy(runningSceneId = sceneId) }
                         startTimer()
                     } else {
-                        _uiState.update { it.copy(error = "Failed to activate scene") }
+                        _uiState.update { it.copy(message = "Failed to activate scene") }
                     }
                 }
                 currentId == sceneId -> {
@@ -84,7 +84,7 @@ class MainViewModel @Inject constructor(
                         _uiState.update { it.copy(runningSceneId = sceneId) }
                         startTimer()
                     } else {
-                        _uiState.update { it.copy(error = "Failed to switch scene") }
+                        _uiState.update { it.copy(message = "Failed to switch scene") }
                     }
                 }
             }
@@ -110,13 +110,13 @@ class MainViewModel @Inject constructor(
         if (!success) {
             success = revertToDefault()
             if (!success) {
-                _uiState.update { it.copy(error = "Failed to revert to default preset") }
+                _uiState.update { it.copy(message = "Failed to revert to default preset") }
             }
         }
     }
 
-    fun clearError() {
-        _uiState.update { it.copy(error = null) }
+    fun clearMessage() {
+        _uiState.update { it.copy(message = null) }
     }
 
     fun onPinStatusChanged(pinned: Boolean) {

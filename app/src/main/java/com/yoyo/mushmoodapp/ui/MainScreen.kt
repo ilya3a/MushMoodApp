@@ -10,19 +10,29 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.weight
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -46,9 +56,23 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
         "Scene ${'A' + id} — %02d:%02d".format(minutes, seconds)
     } ?: "No active scene"
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    var showSheet by remember { mutableStateOf(false) }
+    var hostText by remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit) { viewModel.load() }
+
+    LaunchedEffect(state.message) {
+        state.message?.let {
+            snackbarHostState.showSnackbar(it)
+            viewModel.clearMessage()
+        }
+    }
+
     AnimatedGradientBackground(gradientSpec) {
         Scaffold(
             containerColor = Color.Transparent,
+            snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 CenterAlignedTopAppBar(
                     title = {
@@ -61,6 +85,14 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
                         containerColor = Color.Transparent
                     )
                 )
+            },
+            floatingActionButton = {
+                FloatingActionButton(onClick = {
+                    hostText = state.host
+                    showSheet = true
+                }) {
+                    Text("⚙")
+                }
             }
         ) { innerPadding ->
             Column(
@@ -82,6 +114,37 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
                     onClick = { viewModel.onSceneClick(2) },
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp)
                 ) { Text("Scene C") }
+            }
+        }
+
+        if (showSheet) {
+            ModalBottomSheet(onDismissRequest = { showSheet = false }) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    OutlinedTextField(
+                        value = hostText,
+                        onValueChange = { hostText = it },
+                        label = { Text("Host") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Button(
+                            onClick = {
+                                viewModel.setHost(hostText)
+                                showSheet = false
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) { Text("Save") }
+                        Button(
+                            onClick = { viewModel.onPingClick() },
+                            modifier = Modifier.weight(1f)
+                        ) { Text("Ping") }
+                    }
+                }
             }
         }
     }
