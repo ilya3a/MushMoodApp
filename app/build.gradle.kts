@@ -63,7 +63,7 @@ dependencies {
     implementation(libs.gson)
 
     // Media3 ExoPlayer
-    implementation(libs.media3.exoplayer)
+    implementation(libs.androidx.media3.exoplayer)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
