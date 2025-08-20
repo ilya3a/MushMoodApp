@@ -34,7 +34,7 @@ object WledModule {
     @Singleton
     fun provideRetrofit(client: OkHttpClient): Retrofit =
         Retrofit.Builder()
-            .baseUrl("http://localhost/")
+            .baseUrl("https://192.168.10.14/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

@@ -24,11 +24,11 @@ class WledRepository @Inject constructor(
     }
 
     suspend fun ping(): Boolean {
-        val url = "http://${'$'}{prefs.getHost()}/json/state"
+        val url = "https://${prefs.getHost()}:8080/json/state"
         return try {
             val response = api.ping(url)
             val success = response.isSuccessful
-            Log.d(TAG, "ping success=${'$'}success")
+            Log.d(TAG, "ping success= success")
             success
         } catch (t: Throwable) {
             Log.e(TAG, "ping error", t)
