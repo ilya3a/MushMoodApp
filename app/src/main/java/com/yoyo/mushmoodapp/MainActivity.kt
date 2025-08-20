@@ -18,5 +18,6 @@ class MainActivity : ComponentActivity() {
                 MainScreen()
             }
         }
+        window.decorView.post { startLockTask() }
     }
 }
