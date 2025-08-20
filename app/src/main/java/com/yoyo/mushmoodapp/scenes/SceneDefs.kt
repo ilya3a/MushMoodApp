@@ -20,8 +20,8 @@ data class SceneDef(
 
 object SceneDefs {
     const val DEFAULT_PRESET_ID = 1
-    const val DEFAULT_SONG_RES = 2
-
+    @RawRes
+     val DEFAULT_SONG_RES = R.raw.default_song
     val defaultGradient = GradientSpec(
         colors = listOf(
             Color(0xFF0f2027),
