@@ -15,11 +15,14 @@ okhttp = "4.12.0"
 gson = "2.11.0"
 coroutines = "1.9.0"
 androidxHiltNavigationCompose = "1.2.0"
-exoplayer = "1.4.1"
+exoplayer = "1.8.0"
 
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+#androidx-media3-bom = { module = "androidx.media3:media3-bom", version.ref = "exoplayer" }
+androidx-media3-datasource = { module = "androidx.media3:media3-datasource", version.ref = "exoplayer" }
+androidx-media3-ui = { module = "androidx.media3:media3-ui", version.ref = "exoplayer" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
